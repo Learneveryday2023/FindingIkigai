@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ค้นหาอิคิไกของเธอ | Ikigai Finder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-warm: #FFFBF5;
+            --text-dark: #422800;
+            --primary: #F59E0B; /* Amber 500 */
+            --primary-hover: #D97706; /* Amber 600 */
+            --secondary: #FDE68A; /* Amber 200 */
+            --border-soft: #E7E5E4; /* Stone 200 */
+            --text-muted: #78716C; /* Stone 500 */
+        }
+        body {
+            font-family: 'Mitr', 'Sarabun', sans-serif;
+            background-color: var(--bg-warm);
+            color: var(--text-dark);
+        }
+        .step-card {
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            opacity: 0;
+            transform: translateY(20px);
+            position: absolute;
+            width: 100%;
+            pointer-events: none;
+        }
+        .step-card.active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            pointer-events: auto;
+        }
+        .hidden-start {
+            display: none;
+        }
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        textarea {
+            resize: none;
+            background-color: #FFFCF8;
+            border-color: var(--border-soft);
+            color: var(--text-dark);
+        }
+        textarea:focus {
+            --tw-ring-color: var(--primary);
+            border-color: var(--primary);
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        @media (min-width: 1024px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(2, 1fr);
+            }
+        }
+        .summary-box {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px -2px rgba(0,0,0,0.05);
+            border-left: 5px solid;
+            min-height: 200px;
+        }
+        .summary-box h3 {
+            display: flex;
+            align-items: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .summary-box pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Sarabun', sans-serif;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        .btn {
+            font-family: 'Mitr', sans-serif;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: all 0.2s ease-in-out;
+            transform-origin: center;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        .btn-secondary {
+            background-color: #F7F4F0;
+            color: var(--text-muted);
+        }
+        .btn-secondary:hover {
+            background-color: #EDEAE6;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <main class="w-full max-w-4xl mx-auto">
+        <div id="app-container" class="bg-white rounded-2xl shadow-xl overflow-hidden border-4 border-white">
+            
+            <!-- Header and Progress Bar -->
+            <div class="p-6 border-b border-stone-200 text-center">
+                <h1 class="text-2xl md:text-3xl font-semibold">มาค้นหา 'เหตุผลที่ทำให้ใจฟู' ของเธอกันเถอะ</h1>
+                <p class="text-stone-500 mt-2">ค่อยๆไปทีละก้าวนะ เราอยู่ตรงนี้เสมอ :)</p>
+                <div id="progress-container" class="w-full bg-stone-200 rounded-full h-2.5 mt-6">
+                    <div id="progress-bar" class="h-2.5 rounded-full progress-bar-fill" style="width: 0%; background-color: var(--primary);"></div>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 relative min-h-[500px] flex flex-col">
+                <!-- Step 0: Love -->
+                <div id="step-0" class="step-card active">
+                    <h2 class="text-2xl font-semibold mb-2">❤️ อะไรที่ทำแล้ว 'ใจฟู' สุดๆ?</h2>
+                    <p class="text-stone-500 mb-4">นึกถึงสิ่งที่ทำแล้วมีความสุขจนลืมเวลาไปเลย... ไม่ต้องคิดถึงเรื่องเงินหรือเรื่องอื่นๆนะ เอาแค่ความสุขล้วนๆ</p>
+                    <textarea id="love-input" class="w-full h-64 p-4 border rounded-lg focus:ring-2 transition" placeholder="ลองนึกดูนะ...&#10;- การได้นั่งวาดรูปเล่นคนเดียวเงียบๆ&#10;- การได้ทำขนมให้คนที่เรารักทาน&#10;- การได้จัดห้องใหม่ให้สวยน่าอยู่&#10;- การได้คุยเรื่องที่ชอบกับเพื่อนที่เข้าใจ"></textarea>
+                </div>
+
+                <!-- Step 1: Good At -->
+                <div id="step-1" class="step-card hidden-start">
+                    <h2 class="text-2xl font-semibold mb-2">💪 แล้วเธอ 'เก่ง' เรื่องไหนเป็นพิเศษ?</h2>
+                    <p class="text-stone-500 mb-4">อะไรคือสิ่งที่เธอทำได้ดีแบบสบายๆ หรือเป็นเรื่องที่เพื่อนๆ ชอบมาขอให้ช่วยเสมอ? บอกมาให้หมดเลยนะ!</p>
+                    <textarea id="good-at-input" class="w-full h-64 p-4 border rounded-lg focus:ring-2 transition" placeholder="อาจจะเป็นเรื่องแบบนี้...&#10;- เราเก่งเรื่องปลอบใจคนอื่นนะ&#10;- จัดระเบียบอะไรก็ได้ ขอให้บอก!&#10;- เล่าเรื่องตลกให้คนอื่นขำได้ตลอด&#10;- แก้ปัญหาคอมพิวเตอร์เก่งมาก"></textarea>
+                </div>
+
+                <!-- Step 2: World Needs -->
+                <div id="step-2" class="step-card hidden-start">
+                    <h2 class="text-2xl font-semibold mb-2">🌍 เธออยาก 'มอบอะไรดีๆ' ให้กับโลกใบนี้?</h2>
+                    <p class="text-stone-500 mb-4">ถ้าเธอมีพลังวิเศษเล็กๆ ที่จะช่วยแก้ปัญหาอะไรสักอย่างในสังคมหรือชุมชนได้ เธออยากจะช่วยเรื่องอะไร?</p>
+                    <textarea id="world-needs-input" class="w-full h-64 p-4 border rounded-lg focus:ring-2 transition" placeholder="เช่น...&#10;- อยากให้มีพื้นที่สีเขียวมากกว่านี้&#10;- อยากช่วยให้คนเข้าใจสุขภาพจิตมากขึ้น&#10;- อยากสอนการออมเงินให้เด็กๆ&#10;- อยากทำให้คนแก่ในซอยไม่เหงา"></textarea>
+                </div>
+
+                <!-- Step 3: Paid For -->
+                <div id="step-3" class="step-card hidden-start">
+                    <h2 class="text-2xl font-semibold mb-2">💰 แล้วทักษะแบบไหนที่ 'สร้างรายได้' ให้เธอได้บ้าง?</h2>
+                    <p class="text-stone-500 mb-4">ลองคิดดูเล่นๆ ว่า จากสิ่งที่เธอทำได้ดี มีอะไรบ้างที่คนอื่นน่าจะยอมจ่ายเงินเพื่อแลกกับมัน?</p>
+                    <textarea id="paid-for-input" class="w-full h-64 p-4 border rounded-lg focus:ring-2 transition" placeholder="ตัวอย่างนะ...&#10;- รับแปลเอกสาร&#10;- สอนพิเศษออนไลน์&#10;- ขายของแฮนด์เมดที่เราทำเอง&#10;- รับจ้างจัดบ้านให้คนอื่น"></textarea>
+                </div>
+                
+                <!-- Step 4: Summary -->
+                <div id="step-4" class="step-card hidden-start">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-semibold">นี่คือภาพสะท้อนตัวตนของเธอ... ยอดเยี่ยมไปเลย!</h2>
+                        <p class="text-stone-500 mt-2">ลองมองหา 'จุดเชื่อมโยง' ระหว่างแต่ละส่วนดูนะ บางทีอิคิไกของเธออาจจะซ่อนอยู่ตรงนั้นก็ได้</p>
+                    </div>
+                    <div class="summary-grid">
+                        <div class="summary-box" style="border-color: #F87171;">
+                            <h3>❤️ สิ่งที่ทำให้ใจฟู</h3>
+                            <pre id="love-summary"></pre>
+                        </div>
+                        <div class="summary-box" style="border-color: #60A5FA;">
+                            <h3>💪 เรื่องที่เธอเก่ง</h3>
+                            <pre id="good-at-summary"></pre>
+                        </div>
+                        <div class="summary-box" style="border-color: #4ADE80;">
+                            <h3>🌍 สิ่งดีๆ ที่อยากมอบให้โลก</h3>
+                            <pre id="world-needs-summary"></pre>
+                        </div>
+                        <div class="summary-box" style="border-color: #FBBF24;">
+                            <h3>💰 สิ่งที่สร้างรายได้ได้</h3>
+                            <pre id="paid-for-summary"></pre>
+                        </div>
+                    </div>
+                     <div class="mt-8 text-center bg-amber-50 border-l-4 border-amber-400 text-amber-800 p-4 rounded-r-lg">
+                        <p><strong>จำไว้นะ:</strong> การเดินทางนี้ไม่มีผิดไม่มีถูก มันคือการทำความรู้จักตัวเองให้มากขึ้นในวันนี้ และอิคิไกของเธอก็สามารถเติบโตและเปลี่ยนแปลงไปพร้อมกับเธอได้เสมอ :)</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div id="nav-buttons" class="mt-auto pt-6 flex justify-between items-center">
+                    <button id="back-button" class="btn btn-secondary">
+                        ขอกลับไปแป๊บ
+                    </button>
+                    <button id="next-button" class="btn btn-primary">
+                        ไปต่อกันเลย!
+                    </button>
+                    <button id="finish-button" class="btn btn-primary hidden-start" style="background-color: #22C55E;">
+                        ดูผลสรุปของฉัน
+                    </button>
+                     <button id="restart-button" class="btn btn-secondary hidden-start" style="background-color: #A78BFA; color: white;">
+                        เริ่มใหม่ทั้งหมด
+                    </button>
+                </div>
+            </div>
+        </div>
+        <footer class="text-center mt-6 text-sm text-stone-400">
+            <p>ขอให้เป็นการเดินทางที่อบอุ่นหัวใจนะ</p>
+        </footer>
+    </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // State management for the application
+        let currentStep = 0;
+        const totalSteps = 5; // 4 questions + 1 summary page
+        const ikigaiData = {
+            love: '',
+            goodAt: '',
+            worldNeeds: '',
+            paidFor: ''
+        };
+
+        // DOM element references
+        const progressBar = document.getElementById('progress-bar');
+        const backButton = document.getElementById('back-button');
+        const nextButton = document.getElementById('next-button');
+        const finishButton = document.getElementById('finish-button');
+        const restartButton = document.getElementById('restart-button');
+        const stepCards = document.querySelectorAll('.step-card');
+
+        // Function to handle navigation between steps
+        function navigate(step) {
+            if (step < 0 || step >= totalSteps) return;
+
+            saveCurrentStepData();
+
+            const currentCard = document.getElementById(`step-${currentStep}`);
+            const nextCard = document.getElementById(`step-${step}`);
+
+            if (currentCard && nextCard) {
+                currentCard.classList.remove('active');
+                // After the fade-out animation, switch the content
+                setTimeout(() => {
+                    currentCard.classList.add('hidden-start');
+                    nextCard.classList.remove('hidden-start');
+                    // A tiny delay to allow the browser to render the display change before starting the fade-in animation
+                    requestAnimationFrame(() => {
+                        nextCard.classList.add('active');
+                    });
+                }, 400); // Match CSS transition duration
+            }
+            
+            currentStep = step;
+            updateUI();
+        }
+        
+        function navigateNext() {
+            navigate(currentStep + 1);
+        }
+
+        function navigateBack() {
+            navigate(currentStep - 1);
+        }
+
+        // Function to update the UI based on the current step
+        function updateUI() {
+            // Progress bar: represents completion of question steps (0-3)
+            const questionSteps = totalSteps - 1;
+            const progressPercentage = (currentStep / questionSteps) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+
+            // Button visibility
+            backButton.style.display = currentStep > 0 ? 'inline-block' : 'none';
+            nextButton.style.display = currentStep < questionSteps - 1 ? 'inline-block' : 'none';
+            finishButton.style.display = currentStep === questionSteps - 1 ? 'inline-block' : 'none';
+            restartButton.style.display = currentStep === questionSteps ? 'inline-block' : 'none';
+
+            // Hide all buttons on the summary page except for back and restart
+            if (currentStep === questionSteps) {
+                 nextButton.style.display = 'none';
+                 finishButton.style.display = 'none';
+            }
+        }
+        
+        // Function to save data from the current step's textarea
+        function saveCurrentStepData() {
+            switch(currentStep) {
+                case 0:
+                    ikigaiData.love = document.getElementById('love-input').value;
+                    break;
+                case 1:
+                    ikigaiData.goodAt = document.getElementById('good-at-input').value;
+                    break;
+                case 2:
+                    ikigaiData.worldNeeds = document.getElementById('world-needs-input').value;
+                    break;
+                case 3:
+                    ikigaiData.paidFor = document.getElementById('paid-for-input').value;
+                    break;
+            }
+        }
+
+        // Function to display the final summary
+        function showSummary() {
+            saveCurrentStepData(); 
+            
+            document.getElementById('love-summary').textContent = ikigaiData.love || 'ยังไม่ได้กรอกข้อมูลเลยนะ ลองกลับไปทบทวนดู :)';
+            document.getElementById('good-at-summary').textContent = ikigaiData.goodAt || 'ยังไม่ได้กรอกข้อมูลเลยนะ ลองกลับไปทบทวนดู :)';
+            document.getElementById('world-needs-summary').textContent = ikigaiData.worldNeeds || 'ยังไม่ได้กรอกข้อมูลเลยนะ ลองกลับไปทบทวนดู :)';
+            document.getElementById('paid-for-summary').textContent = ikigaiData.paidFor || 'ยังไม่ได้กรอกข้อมูลเลยนะ ลองกลับไปทบทวนดู :)';
+
+            navigate(totalSteps - 1); // Navigate to the summary page (index 4)
+        }
+
+        // Function to restart the process
+        function restart() {
+            ikigaiData.love = '';
+            ikigaiData.goodAt = '';
+            ikigaiData.worldNeeds = '';
+            ikigaiData.paidFor = '';
+
+            document.getElementById('love-input').value = '';
+            document.getElementById('good-at-input').value = '';
+            document.getElementById('world-needs-input').value = '';
+            document.getElementById('paid-for-input').value = '';
+
+            navigate(0);
+        }
+
+        // Add event listeners
+        nextButton.addEventListener('click', navigateNext);
+        backButton.addEventListener('click', navigateBack);
+        finishButton.addEventListener('click', showSummary);
+        restartButton.addEventListener('click', restart);
+
+        // Initial setup
+        stepCards.forEach((card, index) => {
+            if (index === 0) {
+                card.classList.add('active');
+                card.classList.remove('hidden-start');
+            } else {
+                card.classList.add('hidden-start');
+                card.classList.remove('active');
+            }
+        });
+        updateUI();
+    });
+</script>
+
+</body>
+</html>

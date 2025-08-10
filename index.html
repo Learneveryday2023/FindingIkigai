@@ -114,6 +114,68 @@
         .btn-secondary:hover {
             background-color: #EDEAE6;
         }
+
+        /* Ikigai Diagram Styles */
+        .ikigai-diagram-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 450px;
+            margin: 2rem auto;
+        }
+        .ikigai-circle {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            padding: 1rem;
+            mix-blend-mode: screen;
+            opacity: 0.8;
+        }
+        .ikigai-circle.love { background-color: #F87171; top: 0; left: 0; }
+        .ikigai-circle.good-at { background-color: #60A5FA; top: 0; right: 0; }
+        .ikigai-circle.world-needs { background-color: #4ADE80; bottom: 0; left: 0; }
+        .ikigai-circle.paid-for { background-color: #FBBF24; bottom: 0; right: 0; }
+        
+        .ikigai-intersection {
+            position: absolute;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+        }
+        .ikigai-passion { top: 20%; left: 50%; transform: translateX(-50%); }
+        .ikigai-mission { top: 50%; left: 20%; transform: translateY(-50%); }
+        .ikigai-vocation { bottom: 20%; left: 50%; transform: translateX(-50%); }
+        .ikigai-profession { top: 50%; right: 20%; transform: translateY(-50%); }
+        .ikigai-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            background-color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -161,11 +223,25 @@
                 
                 <!-- Step 4: Summary -->
                 <div id="step-4" class="step-card hidden-start">
-                    <div class="text-center mb-8">
+                    <div class="text-center mb-4">
                         <h2 class="text-3xl font-semibold">นี่คือภาพสะท้อนตัวตนของเธอ... ยอดเยี่ยมไปเลย!</h2>
-                        <p class="text-stone-500 mt-2">ลองมองหา 'จุดเชื่อมโยง' ระหว่างแต่ละส่วนดูนะ บางทีอิคิไกของเธออาจจะซ่อนอยู่ตรงนั้นก็ได้</p>
+                        <p class="text-stone-500 mt-2">แผนภาพนี้คือแนวทางนะ ลองดูว่าคำตอบของเธออยู่ตรงไหนบ้าง</p>
                     </div>
-                    <div class="summary-grid">
+
+                    <!-- Ikigai Diagram -->
+                    <div class="ikigai-diagram-container">
+                        <div class="ikigai-circle love">❤️<br>สิ่งที่รัก</div>
+                        <div class="ikigai-circle good-at">💪<br>สิ่งที่เก่ง</div>
+                        <div class="ikigai-circle world-needs">🌍<br>สิ่งที่โลกต้องการ</div>
+                        <div class="ikigai-circle paid-for">💰<br>สิ่งที่สร้างรายได้</div>
+                        <div class="ikigai-intersection ikigai-passion">Passion</div>
+                        <div class="ikigai-intersection ikigai-mission">Mission</div>
+                        <div class="ikigai-intersection ikigai-vocation">Vocation</div>
+                        <div class="ikigai-intersection ikigai-profession">Profession</div>
+                        <div class="ikigai-center">IKIGAI</div>
+                    </div>
+
+                    <div class="summary-grid mt-8">
                         <div class="summary-box" style="border-color: #F87171;">
                             <h3>❤️ สิ่งที่ทำให้ใจฟู</h3>
                             <pre id="love-summary"></pre>
